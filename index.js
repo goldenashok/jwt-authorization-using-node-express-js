@@ -20,8 +20,8 @@ function ensureToken(req, res, next) {
     const bearerHeader = req.headers['authorization'];
     if (typeof bearerHeader !== 'undefined') {
         const bearer = bearerHeader.split(" ");
-        const bearerToken = bearer[0];
-        jwt.verify(bearerToken, 'my_secretkey', (err, user) => {
+        const bearerToken = bearer[1];
+        jwt.verify(bearerToken, process.env.ACCESSTOKEN, (err, user) => {
             if (err) {
                 res.sendStatus(403);
             } else {
@@ -48,9 +48,9 @@ app.post('/api/login', (req, res) => {
     })
 });
 
-app.get('api/producted', ensureToken, (req, res) => {
+app.get('/api/producted', ensureToken, (req, res) => {
     res.json({
-        user: postData.filter(item => item.name === req.body.username)
+        user: postData.filter(item => item.user === req.user)
     })
 });
 
